@@ -31,8 +31,34 @@ void rotateleft(node * &k1){
     k1 -> right = k2 -> left;
     k2 -> left = k1;
     k1 -> height = max(getheight(k1 -> left),getheight(k1 -> right)) + 1;
-    k2 -> height = max(getheight(k2->left), getheight(k2->right)) + 1;
+    k2 -> height = max(getheight(k2->left), getheight(k1->right)) + 1;
     k1 = k2;
+}
+void LRrotate(node* &k3){
+    rotateleft(k3->left);
+    rotateright(k3);
+}
+void RLrotate(node* &k1){
+    rotateright(k1->right);
+    rotateleft(k1);
+}
+void insert(int x, node* &t){
+    if (t == NULL) t = new node(x, NULL, NULL, 0);
+    else if (x < t -> data){
+        insert(x, t -> left);
+        if (balancefactor(t) == 2){
+            if (x < t -> left -> data) rotateright(t);
+            else LRrotate(t);
+        }
+    }
+    else if (x > t -> data){
+        insert(x, t -> right);
+        if (balancefactor(t) == -2){
+            if (x > t -> right -> data) rotateleft(t);
+            else RLrotate(t);
+        }
+    }
+    t -> height = max(getheight(t -> left), getheight(t -> right)) + 1;
 }
 void preorder(node* root){
     if (root != NULL){
@@ -42,17 +68,15 @@ void preorder(node* root){
     }
 }
 int main(){
-   /* int a[] = {32, 51, 27, 83, 96, 11, 45, 75, 66}; */
-   node* root = new node(10, NULL, NULL, 0);
-   root -> right = new node(20, NULL, NULL, 1);
-   root -> right -> right = new node(30, NULL, NULL, 2);
-   cout << "cay ban dau: ";
+    int a[] = {32, 51, 27, 83, 96, 11, 45, 75, 66};
+    int n = 9;
+    node* root = NULL;
+    for (int i = 0; i < n; i++){
+        insert(a[i], root);
+    }
+    cout << "cay sau khi duyet tung phan tu: ";
     preorder(root);
-    cout << endl;
-    rotateleft(root);
-    cout << "cay sau khi xoay trai: ";
-    preorder(root);
-    cout << endl;
+    return 0;
 }
 
 
